@@ -29,6 +29,3 @@ for i in range(0, len(subdirs)):
                 print ("file:", conv_file_path, " already exists")
     else:
         print ("Not a directory:", raw_path)
-
-
-
