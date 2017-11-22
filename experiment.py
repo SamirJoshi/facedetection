@@ -155,14 +155,13 @@ probes = select_probes(gallery)
 print "Number of Probes: ", len(probes)
 
 scores = {}
+save_dir = args.save_loc[0]
 for p in probes:
     m = re.search('\d{5}', p)
-    scores[m.group(0)] = test_on_gallery(p, gallery)
-    print scores
-
-save_dir = args.save_loc[0]
-for person, results in scores.iteritems():
-    print "Person: ", person
+    name = m.group(0)
+    results = test_on_gallery(p, gallery)
+    scores[name] = results
+    print "Person: ", name
     print "Results: ", results, "\n\n"
-    with open(save_dir + '/' + person,'w') as f:
+    with open(save_dir + '/' + name,'w') as f:
         f.write(json.dumps(results))
