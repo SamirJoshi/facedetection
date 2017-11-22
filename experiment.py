@@ -117,33 +117,33 @@ def select_probes(gallery):
     return probes
 
 def test_on_gallery(probe, gallery):
-    MAX_IMAGES = 5
+    MAX_IMAGES = 4
     results = {}
     for gal, members, imgs in os.walk(gallery):
         for i in members:
-            m = re.search('\d{5}', probe)
-            if m.group(0) == i:
-                continue
-            else:
-                results[i] = []
-                print "Comparing probe %s with gallery member %s" % (m.group(0), i)
-                for root, path, files in os.walk(os.path.join(gallery, i)):
-                    #here is where we can limit the gallery size to only compare with 5 or 6 images
-                    if len(files) > MAX_IMAGES:
-                        count = MAX_IMAGES
-                    else:
-                        count = len(files)
+            results[i] = []
+            print "Comparing probe %s with gallery member %s" % (probe, i)
+            for root, path, files in os.walk(os.path.join(gallery, i)):
+                #Make sure we only check against MAX_IMAGES number of gallery files
+                if len(files) > MAX_IMAGES:
+                    count = MAX_IMAGES
+                else:
+                    count = len(files)
 
-                    for img in xrange(count):
+
+                for img in xrange(count):
+                    #make sure we aren't comparing the probe against itself
+                    if re.search('\d{5}\w{1}\d+.jpg', probe).group(0) == files[img]:
+                        continue
+                    else:
                         d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
                         d = np.dot(d, d) #squared l2 distance
-                        #d = random.random()
                         results[i].append(d)
-                        #print d
 
-                    print "Best Score: ", min(results[i])
-                    results[i] = min(results[i])
-                    break
+                print "Best Score: ", min(results[i])
+                results[i] = min(results[i])
+                break
+                #return results #uncomment here if you want to only test on the very first gallery member
         break
 
     return results
