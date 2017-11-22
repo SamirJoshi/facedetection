@@ -136,9 +136,14 @@ def test_on_gallery(probe, gallery):
                     if re.search('\d{5}\w{1}\d+.jpg', probe).group(0) == files[img]:
                         continue
                     else:
-                        d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
-                        d = np.dot(d, d) #squared l2 distance
-                        results[i].append(d)
+                        try:
+                            d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
+                            d = np.dot(d, d) #squared l2 distance
+                            results[i].append(d)
+                        except Exception as e:
+                            print "Comparison Failed"
+                            print e
+                            continue
 
                 print "Best Score: ", min(results[i])
                 results[i] = min(results[i])
