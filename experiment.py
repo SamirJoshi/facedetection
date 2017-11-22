@@ -124,28 +124,26 @@ def test_on_gallery(probe, gallery):
             results[i] = []
             print "Comparing probe %s with gallery member %s" % (probe, i)
             for root, path, files in os.walk(os.path.join(gallery, i)):
-                #here is where we can limit the gallery size to only compare with 5 or 6 images
+                #Make sure we only check against MAX_IMAGES number of gallery files
                 if len(files) > MAX_IMAGES:
                     count = MAX_IMAGES
                 else:
                     count = len(files)
 
+
                 for img in xrange(count):
-                    m = re.search('\d{5}\w{1}\d+.jpg', probe)
-                    print m.group(0), files[img]
-                    if m.group(0) == files[img]:
+                    #make sure we aren't comparing the probe against itself
+                    if re.search('\d{5}\w{1}\d+.jpg', probe).group(0) == files[img]:
                         continue
                     else:
                         d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
                         d = np.dot(d, d) #squared l2 distance
-                        #d = random.random()
                         results[i].append(d)
-                        #print d
 
                 print "Best Score: ", min(results[i])
                 results[i] = min(results[i])
                 break
-                return results #uncomment here if you want to only test on the very first gallery member
+                #return results #uncomment here if you want to only test on the very first gallery member
         break
 
     return results
