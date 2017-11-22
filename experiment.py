@@ -117,18 +117,33 @@ def select_probes(gallery):
     return probes
 
 def test_on_gallery(probe, gallery):
+    MAX_IMAGES = 5
     results = {}
     for gal, members, imgs in os.walk(gallery):
         for i in members:
-            results[i] = []
-            for root, path, files in os.walk(os.path.join(gallery, i)):
-                #here is where we can limit the gallery size to only compare with 5 or 6 images
-                for img in files:
-                    d = getRep(probe) - getRep(os.path.join(gallery,i, img))
-                    d = np.dot(d, d) #squared l2 distance
-                    #d = random.random()
-                    results[i].append(d)
-                break
+            m = re.search('\d{5}', probe)
+            if m.group(0) == i:
+                continue
+            else:
+                results[i] = []
+                print "Comparing probe %s with gallery member %s" % (m.group(0), i)
+                for root, path, files in os.walk(os.path.join(gallery, i)):
+                    #here is where we can limit the gallery size to only compare with 5 or 6 images
+                    if len(files) > MAX_IMAGES:
+                        count = MAX_IMAGES
+                    else:
+                        count = len(files)
+
+                    for img in xrange(count):
+                        d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
+                        d = np.dot(d, d) #squared l2 distance
+                        #d = random.random()
+                        results[i].append(d)
+                        #print d
+
+                    print "Best Score: ", min(results[i])
+                    results[i] = min(results[i])
+                    break
         break
 
     return results
@@ -137,12 +152,15 @@ def test_on_gallery(probe, gallery):
 gallery = args.gallery[0]
 probes = select_probes(gallery)
 
+print "Number of Probes: ", len(probes)
+
+
 scores = {}
+
 for p in probes:
     m = re.search('\d{5}', p)
     scores[m.group(0)] = test_on_gallery(p, gallery)
     print scores
-    break
 
-with open(args.save_loc,'w') as f:
+with open(args.save_loc[0],'w') as f:
     f.write(json.dumps(scores))
