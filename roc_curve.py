@@ -10,8 +10,8 @@ def calculateRateTuples(thresh, auth, impost):
 def draw_ROC(auth, impost):
     matching_rates = [calculateRateTuples(x/100.0, auth, impost) for x in range(100)]
 
-    for x in range(100):
-        print "Threshhold: " + (" " if x % 10 == 0 else "") + str(x/100.0) + ", True Match: " + str(matching_rates[x][0]) + ", False Match Rate: " + str(matching_rates[x][1])
+    # for x in range(100):
+    #     print ("Threshhold: ", (" " if x % 10 == 0 else ""), str(x/100.0), ", True Match: ", str(matching_rates[x][0]), ", False Match Rate: ",  str(matching_rates[x][1]))
 
     np_matching_rates = np.array(matching_rates)
     x = np_matching_rates[:, 1]
