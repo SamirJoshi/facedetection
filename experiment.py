@@ -42,8 +42,8 @@ openfaceModelDir = os.path.join(modelDir, 'openface')
 parser = argparse.ArgumentParser()
 
 #parser.add_argument('imgs', type=str, nargs='+', help="Input images.")
-parser.add_argument('gallery', type=str, nargs='1', help="Input images.")
-parser.add_argument('save_loc', type=str, nargs='1', help="Score save dest.")
+parser.add_argument('gallery', type=str, nargs=1, help="Input images.")
+parser.add_argument('save_loc', type=str, nargs=1, help="Score save dest.")
 
 parser.add_argument('--dlibFacePredictor', type=str, help="Path to dlib's face predictor.",
                     default=os.path.join(dlibModelDir, "shape_predictor_68_face_landmarks.dat"))
@@ -141,6 +141,8 @@ scores = {}
 for p in probes:
     m = re.search('\d{5}', p)
     scores[m.group(0)] = test_on_gallery(p, gallery)
+    print scores
+    break
 
 with open(args.save_loc,'w') as f:
     f.write(json.dumps(scores))
