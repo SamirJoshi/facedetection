@@ -2,4 +2,7 @@ cleaned
 all.zip
 .DS_Store
 converted_face_data
+small_converted_face_data
 face_data
+recog_results
+recog_results_test

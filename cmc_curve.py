@@ -13,13 +13,13 @@ def draw_cmc(recog_rates):
     x = np.linspace(1, n, n)
 
 
-    plt.plot(x, recog_rates, linewidth=2)
+    plt.plot(x, recog_rates, linewidth=3)
     plt.title("CMC Curve")
     plt.xlabel("Rank")
     plt.ylabel("Percent")
     axes = plt.gca()
     axes.set_xlim([1.0, n])
-    axes.set_ylim([0.0, 1.0])
+    axes.set_ylim([0.0, 1.01])
     plt.show()
 
     return 0
@@ -33,15 +33,13 @@ def create_recog_rates(base_dir):
     for name in people_dirs:
         curr_path = base_dir + name
         if os.path.exists(curr_path):
-            print ("curr path:", curr_path)
             with open(curr_path) as json_data:
                 person_dict = json.load(json_data)
                 s_pd = sorted(person_dict.items(), key=operator.itemgetter(1))
-                print ("SPD:", s_pd)
                 index = len(s_pd) - 1
                 for i in range(0, len(s_pd)):
                     # print ("spdi:", s_pd[i][0])
-                    if s_pd[i][0] == name[:-5]:
+                    if s_pd[i][0] == name:
                         index = i
                         break
                 for i in range(index, len(s_pd)):
