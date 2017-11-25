@@ -136,9 +136,14 @@ def test_on_gallery(probe, gallery):
                     if re.search('\d{5}\w{1}\d+.jpg', probe).group(0) == files[img]:
                         continue
                     else:
-                        d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
-                        d = np.dot(d, d) #squared l2 distance
-                        results[i].append(d)
+                        try:
+                            d = getRep(probe) - getRep(os.path.join(gallery,i, files[img]))
+                            d = np.dot(d, d) #squared l2 distance
+                            results[i].append(d)
+                        except Exception as e:
+                            print "Comparison Failed"
+                            print e
+                            continue
 
                 print "Best Score: ", min(results[i])
                 results[i] = min(results[i])
@@ -155,14 +160,13 @@ probes = select_probes(gallery)
 print "Number of Probes: ", len(probes)
 
 scores = {}
+save_dir = args.save_loc[0]
 for p in probes:
     m = re.search('\d{5}', p)
-    scores[m.group(0)] = test_on_gallery(p, gallery)
-    print scores
-
-save_dir = args.save_loc[0]
-for person, results in scores.iteritems():
-    print "Person: ", person
+    name = m.group(0)
+    results = test_on_gallery(p, gallery)
+    scores[name] = results
+    print "Person: ", name
     print "Results: ", results, "\n\n"
-    with open(save_dir + '/' + person,'w') as f:
+    with open(save_dir + '/' + name,'w') as f:
         f.write(json.dumps(results))
