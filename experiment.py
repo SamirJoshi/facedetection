@@ -34,6 +34,8 @@ np.set_printoptions(precision=2)
 
 import openface
 
+#EXAMPLE CODE WE USED AS A STARTING POINT
+
 fileDir = os.path.dirname(os.path.realpath(__file__))
 modelDir = os.path.join(fileDir, '..', 'models')
 dlibModelDir = os.path.join(modelDir, 'dlib')
@@ -102,6 +104,7 @@ def getRep(imgPath):
         print("-----\n")
     return rep
 
+#OUR CODE BEGINS HERE
 def select_probes(gallery):
     probes = []
 
